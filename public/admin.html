@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — JAI MEDICAL AGENCIES</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- ===== Login ===== -->
+  <div class="login-wrap" id="loginView">
+    <form class="login-card" id="loginForm">
+      <span class="brand-mark">Rx</span>
+      <h1>Staff Login</h1>
+      <input type="password" id="loginPassword" placeholder="Enter admin password" autocomplete="current-password" required>
+      <button class="btn btn-primary btn-block" type="submit">Login</button>
+      <p class="form-error" id="loginError" hidden></p>
+      <a href="/" style="font-size:13px;color:var(--brand-dark);font-weight:600">← Back to shop</a>
+    </form>
+  </div>
+
+  <!-- ===== App ===== -->
+  <div id="appView" hidden>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="/">
+          <span class="brand-mark">Rx</span>
+          <span class="brand-text">
+            <strong id="shopName">JAI MEDICAL AGENCIES</strong>
+            <small>Admin Panel</small>
+          </span>
+        </a>
+        <nav class="topnav">
+          <a class="btn btn-ghost btn-sm" href="/" target="_blank">View shop ↗</a>
+          <button class="btn btn-ghost btn-sm" id="logoutBtn">Logout</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container admin-main">
+
+      <nav class="tabs" id="tabs">
+        <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="tab" data-tab="orders">📦 Orders <span class="count-pill" id="pendingPill" hidden>0</span></button>
+        <button class="tab" data-tab="products">💊 Products</button>
+        <button class="tab" data-tab="settings">⚙️ Settings</button>
+      </nav>
+
+      <!-- ---------- Dashboard ---------- -->
+      <section id="tab-dashboard">
+        <div class="stats">
+          <div class="stat accent"><div class="k">Pending orders</div><div class="v" id="stPending">0</div></div>
+          <div class="stat"><div class="k">Orders today</div><div class="v" id="stToday">0</div></div>
+          <div class="stat"><div class="k">Total orders</div><div class="v" id="stTotal">0</div></div>
+          <div class="stat"><div class="k">Products</div><div class="v" id="stProducts">0</div></div>
+          <div class="stat"><div class="k">Total stock</div><div class="v" id="stUnits">0</div></div>
+          <div class="stat alert"><div class="k">Low stock</div><div class="v" id="stLow">0</div></div>
+        </div>
+
+        <div class="section-head"><h2>⚠️ Low stock items</h2></div>
+        <div class="panel">
+          <div class="panel-body">
+            <ul class="low-list" id="lowList"></ul>
+            <p class="muted" id="lowEmpty" style="font-size:14px" hidden>Everything is well stocked. ✅</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Orders ---------- -->
+      <section id="tab-orders" hidden>
+        <div class="section-head">
+          <h2>📦 Incoming orders</h2>
+          <div class="filter-row" id="orderFilters">
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="pending">Pending</button>
+            <button class="chip" data-filter="confirmed">Confirmed</button>
+            <button class="chip" data-filter="delivered">Delivered</button>
+            <button class="chip" data-filter="cancelled">Cancelled</button>
+          </div>
+        </div>
+        <div class="orders" id="ordersList"></div>
+        <div class="panel" id="ordersEmpty" hidden>
+          <div class="panel-body" style="text-align:center;padding:40px">
+            <div class="empty-ico">📭</div>
+            <p class="muted">No orders in this view.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Products ---------- -->
+      <section id="tab-products" hidden>
+        <div class="section-head">
+          <h2>💊 Medicine catalogue</h2>
+          <div class="filter-row">
+            <button class="btn btn-ghost" id="importCsvBtn" title="Upload a CSV to add or update medicines">⬆ Import CSV</button>
+            <button class="btn btn-ghost" id="exportCsvBtn" title="Download your catalogue as a CSV">⬇ Export CSV</button>
+            <button class="btn btn-primary" id="addProductBtn">+ Add medicine</button>
+          </div>
+          <input type="file" id="csvFile" accept=".csv,text/csv" hidden>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Medicine</th>
+                  <th>Category</th>
+                  <th>Pack</th>
+                  <th>Stock qty</th>
+                  <th style="text-align:right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productRows"></tbody>
+            </table>
+          </div>
+        </div>
+        <p class="muted" style="font-size:13px;margin-top:10px">
+          Stock reduces automatically when a customer places an order. Adjust it here anytime.
+          CSV columns: <code>name, category, pack, description, stock</code> — rows matching an existing
+          medicine name update it, new names are added.
+        </p>
+      </section>
+
+      <!-- ---------- Settings ---------- -->
+      <section id="tab-settings" hidden>
+        <div class="section-head"><h2>⚙️ Settings</h2></div>
+        <div class="settings-grid">
+          <div class="panel">
+            <div class="panel-head"><h3>Shop details</h3></div>
+            <form class="panel-body checkout-form" id="shopForm">
+              <label class="field">
+                <span>Shop name (shown to customers)</span>
+                <input type="text" id="setShopName" maxlength="80" required>
+              </label>
+              <label class="field">
+                <span>Low stock alert below this qty</span>
+                <input type="number" id="setLowStock" min="0" max="100000">
+              </label>
+              <button class="btn btn-primary" type="submit">Save shop details</button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>Change password</h3></div>
+            <form class="panel-body checkout-form" id="passwordForm">
+              <label class="field">
+                <span>Current password</span>
+                <input type="password" id="curPass" autocomplete="current-password" required>
+              </label>
+              <label class="field">
+                <span>New password (min 6 characters)</span>
+                <input type="password" id="newPass" minlength="6" autocomplete="new-password" required>
+              </label>
+              <button class="btn btn-primary" type="submit">Change password</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===== Product modal ===== -->
+  <div class="modal-overlay" id="productModal" hidden>
+    <form class="modal" id="productForm">
+      <div class="modal-head">
+        <h3 id="modalTitle">Add medicine</h3>
+        <button class="icon-btn" type="button" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="field">
+          <span>Medicine name *</span>
+          <input type="text" id="pName" placeholder="e.g. Paracetamol 500 mg" maxlength="120" required>
+        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>Category</span>
+            <input type="text" id="pCategory" placeholder="Tablets / Syrups…" list="catList" maxlength="60">
+            <datalist id="catList"></datalist>
+          </label>
+          <label class="field">
+            <span>Stock quantity *</span>
+            <input type="number" id="pStock" min="0" placeholder="e.g. 500" required>
+          </label>
+        </div>
+        <label class="field">
+          <span>Pack / unit</span>
+          <input type="text" id="pPack" placeholder="e.g. Strip of 15 tablets" maxlength="80">
+        </label>
+        <label class="field">
+          <span>Short description</span>
+          <input type="text" id="pDesc" placeholder="e.g. Fever & pain relief" maxlength="200">
+        </label>
+        <p class="form-error" id="productError" hidden></p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" type="button" id="modalCancel">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="modalSave">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/admin.js"></script>
+</body>
+</html>

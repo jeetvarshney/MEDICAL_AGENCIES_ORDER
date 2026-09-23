@@ -1,0 +1,16 @@
+{
+  "name": "jai-medical-agencies",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JAI MEDICAL AGENCIES — wholesale medicine ordering website (no prices, stock reduces on order)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.2.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^27.8.1"
+  }
+}

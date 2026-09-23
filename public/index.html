@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JAI MEDICAL AGENCIES — Online Ordering</title>
+  <meta name="description" content="Order medicines online from JAI MEDICAL AGENCIES. Add items to your order and we will confirm rates on call.">
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="store-body">
+
+  <!-- ===== Top bar (change your shop details here) ===== -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark">Rx</span>
+        <span class="brand-text">
+          <strong id="shopName">JAI MEDICAL AGENCIES</strong>
+          <small>Wholesale Medicines · Bulk Orders</small>
+        </span>
+      </a>
+      <nav class="topnav">
+        <a class="phone-chip" href="tel:+919927006631">📞 +91 99270 06631</a>
+        <a class="btn btn-ghost" href="/admin">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Notice strip ===== -->
+  <div class="notice">
+    <div class="container">
+      <span class="notice-dot"></span>
+      Prices are not shown online — <strong>add your items &amp; place the order</strong>, our team will call you to confirm rates &amp; dispatch.
+    </div>
+  </div>
+
+  <main class="container store-main">
+    <!-- ===== Search + categories ===== -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-ico">🔍</span>
+        <input id="search" class="search" type="search" placeholder="Search medicine… e.g. Paracetamol, ORS, Syrup" autocomplete="off">
+      </div>
+      <div id="cats" class="chips" role="tablist" aria-label="Categories"></div>
+    </div>
+
+    <p class="result-line"><span id="resultCount">0</span> medicines available</p>
+
+    <!-- ===== Product grid ===== -->
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty-state" hidden>
+      <div class="empty-ico">🧺</div>
+      <p>No medicines match your search.</p>
+      <button class="btn btn-ghost" id="clearFilters">Clear search</button>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>© <span id="year"></span> <b id="shopNameFoot">JAI MEDICAL AGENCIES</b> — Orders only, rates confirmed on call.</span>
+      <a href="/admin">Staff login</a>
+    </div>
+  </footer>
+
+  <!-- ===== Cart button ===== -->
+  <button class="fab" id="fab" aria-label="Open your order">
+    <span class="fab-ico">🛒</span>
+    <span class="fab-count" id="cartCount">0</span>
+    <span class="fab-label">Your Order</span>
+  </button>
+
+  <!-- ===== Cart drawer ===== -->
+  <div class="overlay" id="overlay" hidden></div>
+  <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Your order">
+    <header class="drawer-head">
+      <h2 id="drawerTitle">Your Order</h2>
+      <button class="icon-btn" id="closeDrawer" aria-label="Close">✕</button>
+    </header>
+
+    <div class="drawer-body">
+      <!-- view: cart -->
+      <div id="cartView">
+        <ul class="cart-list" id="cartList"></ul>
+        <div class="empty-state small" id="cartEmpty">
+          <div class="empty-ico">🧺</div>
+          <p>Your order is empty.<br>Add medicines from the list.</p>
+        </div>
+      </div>
+
+      <!-- view: checkout -->
+      <form id="checkoutForm" class="checkout-form" hidden novalidate>
+        <p class="form-intro">Enter your details — we will call to confirm rates before dispatch.</p>
+
+        <label class="field">
+          <span>Your / Pharmacy name *</span>
+          <input type="text" id="cName" name="name" placeholder="e.g. Shree Medical Store" maxlength="80" required>
+        </label>
+
+        <label class="field">
+          <span>Phone number *</span>
+          <input type="tel" id="cPhone" name="phone" placeholder="10-digit mobile number" maxlength="13" required>
+        </label>
+
+        <label class="field">
+          <span>Shop / Firm name</span>
+          <input type="text" id="cShop" name="shop" placeholder="Optional" maxlength="100">
+        </label>
+
+        <label class="field">
+          <span>Delivery address *</span>
+          <textarea id="cAddress" name="address" rows="3" placeholder="Shop address, city, PIN code" maxlength="300" required></textarea>
+        </label>
+
+        <label class="field">
+          <span>Notes for us</span>
+          <textarea id="cNote" name="note" rows="2" placeholder="Urgent delivery, specific brand, invoice requirement…" maxlength="500"></textarea>
+        </label>
+
+        <div class="order-recap" id="orderRecap"></div>
+        <p class="form-error" id="formError" hidden></p>
+      </form>
+
+      <!-- view: success -->
+      <div id="successView" hidden>
+        <div class="success-box">
+          <div class="success-ico">✓</div>
+          <h3>Order placed!</h3>
+          <p class="order-id" id="successOrderId">ORD-1001</p>
+          <p>We have reserved your quantities and will call you shortly to confirm rates &amp; delivery.</p>
+          <button class="btn btn-primary btn-block" id="continueBtn">Continue shopping</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="drawer-foot" id="drawerFoot">
+      <div class="cart-summary" id="cartSummary">
+        <span id="cartItemsLabel">0 items</span>
+        <strong id="cartUnitsLabel">0 units</strong>
+      </div>
+      <button class="btn btn-primary btn-block" id="toCheckout" disabled>Proceed to order →</button>
+      <button class="btn btn-primary btn-block" id="placeBtn" form="checkoutForm" type="submit" hidden>Place Order</button>
+      <button class="btn btn-ghost btn-block" id="backToCart" type="button" hidden>← Back to cart</button>
+    </footer>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
